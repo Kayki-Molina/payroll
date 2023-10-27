@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora de Folha de Pagamento</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Calculadora de Folha de Pagamento</h1>
+    <div id="calculator">
+        <input type="number" id="salarioBruto" placeholder="Salário Bruto">
+        <input type="number" id="diasTrabalhados" placeholder="Dias Trabalhados">
+        <input type="number" id="valorVR" placeholder="Valor do VR">
+        <input type="number" id="valorVT" placeholder="Valor do VT">
+        <label for="insalubridade">Insalubridade:</label>
+        <input type="checkbox" id="insalubridade">
+        <label for="periculosidade">Periculosidade:</label>
+        <input type="checkbox" id="periculosidade">
+        <button onclick="calcularFolha()">Calcular</button>
+    </div>
+    <div id="result">
+        <div id="resultText">
+            <p>Salário Líquido: <span id="salarioLiquido">R$ 0.00</span></p>
+            <p>Desconto INSS: <span id="descontoINSS">R$ 0.00</span></p>
+            <p>Desconto IRRF: <span id="descontoIRRF">R$ 0.00</span></p>
+            <p>Valor VR: <span id="valorVRCalculado">R$ 0.00</span></p>
+            <p>Valor VT: <span id="valorVTCalculado">R$ 0.00</span></p>
+            <p>Insalubridade: <span id="insalubridadeCalculada">R$ 0.00</span></p>
+            <p>Periculosidade: <span id="periculosidadeCalculada">R$ 0.00</span></p>
+        </div>
+    </div>
+
+    <!-- Adicione este campo no formulário de cálculo da folha de pagamento -->
+    <input type="email" id="emailFuncionario" placeholder="E-mail do Funcionário">
+
+    <!-- Adicione o botão de envio de e-mail -->
+    <button onclick="enviarFolhaPorEmail()">Enviar por E-mail</button>
+
+    <!-- Botão "Voltar" -->
+    <a href="index4.html">Voltar para o menu</a>
+
+    <script>
+        function calcularFolha() {
+            const salarioBruto = parseFloat(document.getElementById("salarioBruto").value);
+            const descontoINSS = calcularINSS(salarioBruto);
+            const descontoIRRF = calcularIRRF(salarioBruto - descontoINSS);
+
+            const diasTrabalhados = parseInt(document.getElementById("diasTrabalhados").value);
+            const valorVR = parseFloat(document.getElementById("valorVR").value);
+            const valorVT = parseFloat(document.getElementById("valorVT").value);
+            const insalubridade = document.getElementById("insalubridade").checked ? 1.2 : 1;
+            const periculosidade = document.getElementById("periculosidade").checked ? 1.3 : 1;
+
+            const salarioBase = salarioBruto - descontoINSS - descontoIRRF;
+            const salarioComInsalubridade = salarioBase * insalubridade;
+            const salarioComPericulosidade = salarioBase * periculosidade;
+            const valorVRCalculado = valorVR * diasTrabalhados;
+            const valorVTCalculado = valorVT * diasTrabalhados;
+
+            const salarioLiquido = salarioComPericulosidade + salarioComInsalubridade - valorVRCalculado - valorVTCalculado;
+
+            document.getElementById("salarioLiquido").textContent = `R$ ${salarioLiquido.toFixed(2)}`;
+            document.getElementById("descontoINSS").textContent = `R$ ${descontoINSS.toFixed(2)}`;
+            document.getElementById("descontoIRRF").textContent = `R$ ${descontoIRRF.toFixed(2)}`;
+            document.getElementById("insalubridadeCalculada").textContent = `R$ ${((salarioBase * (insalubridade - 1))).toFixed(2)}`;
+            document.getElementById("periculosidadeCalculada").textContent = `R$ ${((salarioBase * (periculosidade - 1))).toFixed(2)}`;
+            document.getElementById("valorVRCalculado").textContent = `R$ ${valorVRCalculado.toFixed(2)}`;
+            document.getElementById("valorVTCalculado").textContent = `R$ ${valorVTCalculado.toFixed(2)}`;
+        }
+
+        function calcularINSS(salarioBruto) {
+            // Substitua essas taxas de exemplo pelas taxas reais do INSS do seu país
+            const taxaINSS = 0.1; // 10%
+            return salarioBruto * taxaINSS;
+        }
+
+        function calcularIRRF(salarioBase) {
+            // Substitua essas taxas de exemplo pelas taxas reais do IRRF do seu país
+            const taxaIRRF = 0.15; // 15%
+            return salarioBase * taxaIRRF;
+        }
+
+        function enviarFolhaPorEmail() {
+            // Recupere o e-mail do funcionário e as informações da folha de pagamento
+            const emailFuncionario = document.getElementById("emailFuncionario").value;
+            const salarioLiquido = document.getElementById("salarioLiquido").textContent;
+            const descontoINSS = document.getElementById("descontoINSS").textContent;
+            const descontoIRRF = document.getElementById("descontoIRRF").textContent;
+            const valorVR = document.getElementById("valorVRCalculado").textContent;
+            const valorVT = document.getElementById("valorVTCalculado").textContent;
+            const insalubridade = document.getElementById("insalubridadeCalculada").textContent;
+            const periculosidade = document.getElementById("periculosidadeCalculada").textContent;
+
+            // Construa o corpo do e-mail com as informações da folha de pagamento
+            const corpoEmail = `
+                Aqui estão as informações da folha de pagamento:
+                Salário Líquido: ${salarioLiquido}
+                Desconto INSS: ${descontoINSS}
+                Desconto IRRF: ${descontoIRRF}
+                Valor VR Calculado: ${valorVR}
+                Valor VT Calculado: ${valorVT}
+                Insalubridade Calculada: ${insalubridade}
+                Periculosidade Calculada: ${periculosidade}
+            `;
+
+            // Crie um link de e-mail com o corpo do e-mail preenchido
+            const emailLink = `mailto:${emailFuncionario}?subject=Folha de Pagamento&body=${encodeURIComponent(corpoEmail)}`;
+
+            // Abra o cliente de e-mail padrão com o link de e-mail preenchido
+            window.location.href = emailLink;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles5.css">
+</head>
+<body>
+    <form>
+        <!-- Nome completo -->
+        <div class="form-outline mb-4">
+            <input type="text" id="fullName" class="form-control" />
+            <label class="form-label" for="fullName">Nome completo</label>
+        </div>
+
+        <!-- Email -->
+        <div class="form-outline mb-4">
+            <input type="text" id="email" class="form-control" />
+            <label class="form-label" for "email">Email</label>
+        </div>
+
+        <!-- CPF -->
+        <div class="form-outline mb-4">
+            <input type="text" id="cpf" class="form-control" />
+            <label class="form-label" for="cpf">CPF</label>
+        </div>
+
+        <!-- Cargo -->
+        <div class="form-outline mb-4">
+            <input type="text" id="cargo" class="form-control" />
+            <label class="form-label" for="cargo">Cargo</label>
+        </div>
+
+        <!-- Salário -->
+        <div class="form-outline mb-4">
+            <input type="text" id="salario" class="form-control" />
+            <label class="form-label" for="salario">Salário bruto (sem descontos)</label>
+        </div>
+
+        <!-- Numero de registro -->
+        <div class="form-outline mb-4">
+            <input type="text" id="numeroRegistro" class="form-control" />
+            <label class="form-label" for="numeroRegistro">Número de registro</label>
+        </div>
+
+        <!-- Botão de registro -->
+        <button type="button" class="btn btn-primary btn-block mb-4" id="registerButton">Registrar</button>
+    </form>
+
+    <h2>Funcionários Cadastrados</h2>
+    <table>
+        <tr>
+            <th>Nome Completo</th>
+            <th>Email</th>
+            <th>CPF</th>
+            <th>Cargo</th>
+            <th>Salário</th>
+            <th>Número de Registro</th>
+            <th>Ação</th> <!-- Coluna para os botões de Excluir e Editar -->
+        </tr>
+        <tbody id="employeeList">
+            <!-- Aqui serão exibidos os funcionários cadastrados -->
+        </tbody>
+    </table>
+
+    <script>
+        const registerButton = document.getElementById("registerButton");
+        const employeeList = document.getElementById("employeeList");
+        let employees = [];
+
+        registerButton.addEventListener("click", function() {
+            const fullName = document.getElementById("fullName").value;
+            const email = document.getElementById("email").value;
+            const cpf = document.getElementById("cpf").value;
+            const cargo = document.getElementById("cargo").value;
+            const salario = document.getElementById("salario").value;
+            const numeroRegistro = document.getElementById("numeroRegistro").value;
+
+            const employee = {
+                fullName: fullName,
+                email: email,
+                cpf: cpf,
+                cargo: cargo,
+                salario: salario,
+                numeroRegistro: numeroRegistro
+            };
+
+            employees.push(employee);
+
+            // Limpar os campos de registro
+            document.getElementById("fullName").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("cpf").value = "";
+            document.getElementById("cargo").value = "";
+            document.getElementById("salario").value = "";
+            document.getElementById("numeroRegistro").value = "";
+
+            displayEmployees();
+        });
+
+        function displayEmployees() {
+            employeeList.innerHTML = ""; // Limpar a lista
+
+            employees.forEach(function(employee, index) {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${employee.fullName}</td>
+                    <td>${employee.email}</td>
+                    <td>${employee.cpf}</td>
+                    <td>${employee.cargo}</td>
+                    <td>${employee.salario}</td>
+                    <td>${employee.numeroRegistro}</td>
+                    <td>
+                        <button onclick="editEmployee(${index})">Editar</button>
+                        <button onclick="deleteEmployee(${index})">Excluir</button>
+                    </td>
+                `;
+                employeeList.appendChild(row);
+            });
+        }
+
+        function editEmployee(index) {
+            // Preencha o formulário com os detalhes do funcionário para edição
+            const employee = employees[index];
+            document.getElementById("fullName").value = employee.fullName;
+            document.getElementById("email").value = employee.email;
+            document.getElementById("cpf").value = employee.cpf;
+            document.getElementById("cargo").value = employee.cargo;
+            document.getElementById("salario").value = employee.salario;
+            document.getElementById("numeroRegistro").value = employee.numeroRegistro;
+
+            // Remova o funcionário da lista (você pode adicionar lógica de edição mais avançada aqui)
+            employees.splice(index, 1);
+            displayEmployees();
+        }
+
+        function deleteEmployee(index) {
+            // Remove o funcionário do array
+            employees.splice(index, 1);
+
+            // Atualiza a exibição dos funcionários
+            displayEmployees();
+        }
+    </script>
+
+    <a href="index4.html">Voltar para o Menu</a>
+</body>
+</html>

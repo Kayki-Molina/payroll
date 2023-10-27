@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="styles4.css">
+    <title>Menu</title>
+</head>
+<body>
+    <div class="menu">
+        <ul>
+            <li><a href="#" id="gerarFolha">Gerar Folha de pagamentos</a></li>
+            <li><a href="#" id="sair">Sair</a></li>
+            <li><a href="#" id="registrarNovoFuncionario">Registrar Novo Funcionário</a></li>
+        </ul>
+    </div>
+
+    <script>
+        // Adicionar event listeners para as opções do menu
+        document.getElementById("gerarFolha").addEventListener("click", function() {
+            // Redirecionar para a página de geração de folha de pagamento
+            window.location.href = "index.html";
+        });
+
+        document.getElementById("sair").addEventListener("click", function() {
+            // Realizar a ação de sair (por exemplo, encerrar a sessão)
+            alert("Saindo da sua conta..."); // Você pode adicionar sua lógica de saída aqui
+            window.location.href = "index2.html";
+        });
+        // Adicionar event listeners para as opções do menu
+        document.getElementById("registrarNovoFuncionario").addEventListener("click", function() {
+            window.location.href = "index5.html";
+        });
+    </script>
+</body>
+</html>
